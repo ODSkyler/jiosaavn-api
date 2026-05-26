@@ -1,0 +1,269 @@
+export const runtime = "nodejs";
+export const preferredRegion = "bom1";
+
+import http from "http";
+import { URL } from "url";
+
+function decode(text) {
+  if (!text) return "";
+
+  return text
+    .replace(/&amp;/g, "&")
+    .replace(/&#039;/g, "'")
+    .replace(/&quot;/g, '"');
+}
+
+function formatArtist(artist) {
+  const permaUrl = artist.perma_url || "";
+
+  const artistToken =
+    permaUrl.split("/").pop() || "";
+
+  return {
+    id: artist.id,
+
+    artist_token: artistToken,
+
+    name: decode(artist.name),
+
+    image: artist.image || "",
+
+    perma_url: permaUrl,
+  };
+}
+
+function formatSong(song) {
+  const permaUrl =
+    song.perma_url || "";
+
+  const token =
+    permaUrl.split("/").pop() || "";
+
+  const albumUrl =
+    song.more_info?.album_url || "";
+
+  const albumToken =
+    albumUrl.split("/").pop() || "";
+
+  return {
+    id: song.id,
+
+    token,
+
+    title: decode(song.title),
+
+    subtitle: decode(song.subtitle),
+
+    type: song.type,
+
+    perma_url: permaUrl,
+
+    image: song.image,
+
+    language: song.language,
+
+    year: song.year,
+
+    play_count: song.play_count,
+
+    isExplicit:
+      song.explicit_content === "1",
+
+    more_info: {
+      album_id:
+        song.more_info?.album_id || "",
+
+      album_token:
+        albumToken,
+
+      album:
+        decode(song.more_info?.album || ""),
+
+      album_url:
+        albumUrl,
+
+      encrypted_media_url:
+        song.more_info?.encrypted_media_url || "",
+
+      duration:
+        song.more_info?.duration || "",
+
+      copyright_text:
+        decode(
+          song.more_info?.copyright_text || ""
+        ),
+
+      artists: {
+        primary:
+          (
+            song.more_info?.artistMap
+              ?.primary_artists || []
+          ).map(formatArtist),
+
+        featured:
+          (
+            song.more_info?.artistMap
+              ?.featured_artists || []
+          ).map(formatArtist),
+      },
+
+      release_date:
+        song.more_info?.release_date || null,
+
+      vcode:
+        song.more_info?.vcode || "",
+
+      vlink:
+        song.more_info?.vlink || "",
+    },
+  };
+}
+
+const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url, "http://localhost");
+
+  if (url.pathname !== "/search/songs") {
+    res.writeHead(404, {
+      "content-type": "application/json",
+    });
+
+    return res.end(
+      JSON.stringify({
+        status: false,
+        message: "Endpoint not found",
+      })
+    );
+  }
+
+  const query = url.searchParams.get("q");
+
+  if (!query) {
+    res.writeHead(400, {
+      "content-type": "application/json",
+    });
+
+    return res.end(
+      JSON.stringify({
+        status: false,
+        message: "Missing q parameter",
+      })
+    );
+  }
+
+  const limit =
+    url.searchParams.get("n") || "20";
+
+  const page =
+    url.searchParams.get("p") || "1";
+
+  const endpoint =
+    `https://www.jiosaavn.com/api.php` +
+    `?p=${page}` +
+    `&q=${encodeURIComponent(query)}` +
+    `&_format=json` +
+    `&_marker=0` +
+    `&api_version=4` +
+    `&ctx=wap6dot0` +
+    `&n=${limit}` +
+    `&__call=search.getResults`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "GET",
+
+      headers: {
+        accept:
+          "application/json, text/plain, */*",
+
+        "x-requested-with":
+          "XMLHttpRequest",
+
+        "accept-language":
+          "en-US,en;q=0.9",
+
+        referer:
+          `https://www.jiosaavn.com/search/song/${encodeURIComponent(query)}`,
+
+        "user-agent":
+          "Mozilla/5.0",
+
+        cookie:
+          "DL=english; " +
+          "L=english; " +
+          "mm_latlong=19.0760%2C72.8777; " +
+          "geo=19.0760%2C72.8777%2CIN%2CMaharashtra%2CMumbai%2C400001",
+      },
+    });
+
+    const rawText =
+      await response.text();
+
+    let data;
+
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      res.writeHead(500, {
+        "content-type":
+          "application/json",
+      });
+
+      return res.end(
+        JSON.stringify({
+          status: false,
+          message:
+            "Invalid upstream response",
+          raw: rawText,
+        })
+      );
+    }
+
+    const results =
+      (data.results || [])
+        .filter(
+          (item) =>
+            item.type === "song"
+        )
+        .map(formatSong);
+
+    res.writeHead(200, {
+      "content-type":
+        "application/json",
+
+      "access-control-allow-origin":
+        "*",
+    });
+
+    res.end(
+      JSON.stringify(
+        {
+          total: Number(
+            data.total || 0
+          ),
+
+          start: Number(
+            data.start || 0
+          ),
+
+          results,
+        },
+        null,
+        2
+      )
+    );
+  } catch (err) {
+    res.writeHead(500, {
+      "content-type":
+        "application/json",
+    });
+
+    res.end(
+      JSON.stringify({
+        status: false,
+        message: err.message,
+      })
+    );
+  }
+});
+
+server.listen(3000);
