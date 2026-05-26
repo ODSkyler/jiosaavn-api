@@ -42,37 +42,61 @@ function formatSong(song) {
   const token =
     permaUrl.split("/").pop() || "";
 
+  const albumUrl =
+    song.more_info?.album_url || "";
+
+  const albumToken =
+    albumUrl.split("/").pop() || "";
+
   return {
     id: song.id,
 
     token,
 
-    title:
-      decode(song.title),
+    title: decode(song.title),
 
-    subtitle:
-      decode(song.subtitle),
+    subtitle: decode(song.subtitle),
 
-    image:
-      song.image,
+    type: song.type,
 
-    language:
-      song.language,
+    perma_url: permaUrl,
 
-    year:
-      song.year,
+    image: song.image,
+
+    language: song.language,
+
+    year: song.year,
+
+    play_count: song.play_count,
 
     isExplicit:
       song.explicit_content === "1",
 
     more_info: {
+      album_id:
+        song.more_info?.album_id || "",
+
+      album_token:
+        albumToken,
+
+      album:
+        decode(song.more_info?.album || ""),
+
+      album_url:
+        albumUrl,
+
       encrypted_media_url:
         song.more_info
           ?.encrypted_media_url || "",
 
       duration:
-        song.more_info
-          ?.duration || "",
+        song.more_info?.duration || "",
+
+      copyright_text:
+        decode(
+          song.more_info
+            ?.copyright_text || ""
+        ),
 
       artists: {
         primary:
@@ -80,7 +104,23 @@ function formatSong(song) {
             song.more_info?.artistMap
               ?.primary_artists || []
           ).map(formatArtist),
+
+        featured:
+          (
+            song.more_info?.artistMap
+              ?.featured_artists || []
+          ).map(formatArtist),
       },
+
+      release_date:
+        song.more_info
+          ?.release_date || null,
+
+      vcode:
+        song.more_info?.vcode || "",
+
+      vlink:
+        song.more_info?.vlink || "",
     },
   };
 }
