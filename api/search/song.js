@@ -1,8 +1,6 @@
-export const runtime = "nodejs";
-export const preferredRegion = "bom1";
-
-import http from "http";
-import { URL } from "url";
+export const config = {
+  regions: ["bom1"]
+};
 
 function decode(text) {
   if (!text) return "";
@@ -14,7 +12,8 @@ function decode(text) {
 }
 
 function formatArtist(artist) {
-  const permaUrl = artist.perma_url || "";
+  const permaUrl =
+    artist.perma_url || "";
 
   const artistToken =
     permaUrl.split("/").pop() || "";
@@ -22,13 +21,17 @@ function formatArtist(artist) {
   return {
     id: artist.id,
 
-    artist_token: artistToken,
+    artist_token:
+      artistToken,
 
-    name: decode(artist.name),
+    name:
+      decode(artist.name),
 
-    image: artist.image || "",
+    image:
+      artist.image || "",
 
-    perma_url: permaUrl,
+    perma_url:
+      permaUrl,
   };
 }
 
@@ -39,59 +42,37 @@ function formatSong(song) {
   const token =
     permaUrl.split("/").pop() || "";
 
-  const albumUrl =
-    song.more_info?.album_url || "";
-
-  const albumToken =
-    albumUrl.split("/").pop() || "";
-
   return {
     id: song.id,
 
     token,
 
-    title: decode(song.title),
+    title:
+      decode(song.title),
 
-    subtitle: decode(song.subtitle),
+    subtitle:
+      decode(song.subtitle),
 
-    type: song.type,
+    image:
+      song.image,
 
-    perma_url: permaUrl,
+    language:
+      song.language,
 
-    image: song.image,
-
-    language: song.language,
-
-    year: song.year,
-
-    play_count: song.play_count,
+    year:
+      song.year,
 
     isExplicit:
       song.explicit_content === "1",
 
     more_info: {
-      album_id:
-        song.more_info?.album_id || "",
-
-      album_token:
-        albumToken,
-
-      album:
-        decode(song.more_info?.album || ""),
-
-      album_url:
-        albumUrl,
-
       encrypted_media_url:
-        song.more_info?.encrypted_media_url || "",
+        song.more_info
+          ?.encrypted_media_url || "",
 
       duration:
-        song.more_info?.duration || "",
-
-      copyright_text:
-        decode(
-          song.more_info?.copyright_text || ""
-        ),
+        song.more_info
+          ?.duration || "",
 
       artists: {
         primary:
@@ -99,62 +80,31 @@ function formatSong(song) {
             song.more_info?.artistMap
               ?.primary_artists || []
           ).map(formatArtist),
-
-        featured:
-          (
-            song.more_info?.artistMap
-              ?.featured_artists || []
-          ).map(formatArtist),
       },
-
-      release_date:
-        song.more_info?.release_date || null,
-
-      vcode:
-        song.more_info?.vcode || "",
-
-      vlink:
-        song.more_info?.vlink || "",
     },
   };
 }
 
-const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url, "http://localhost");
-
-  if (url.pathname !== "/search/songs") {
-    res.writeHead(404, {
-      "content-type": "application/json",
-    });
-
-    return res.end(
-      JSON.stringify({
-        status: false,
-        message: "Endpoint not found",
-      })
-    );
-  }
-
-  const query = url.searchParams.get("q");
+export default async function handler(
+  req,
+  res
+) {
+  const query =
+    req.query.q;
 
   if (!query) {
-    res.writeHead(400, {
-      "content-type": "application/json",
+    return res.status(400).json({
+      status: false,
+      message:
+        "Missing q parameter",
     });
-
-    return res.end(
-      JSON.stringify({
-        status: false,
-        message: "Missing q parameter",
-      })
-    );
   }
 
   const limit =
-    url.searchParams.get("n") || "20";
+    req.query.n || "20";
 
   const page =
-    url.searchParams.get("p") || "1";
+    req.query.p || "1";
 
   const endpoint =
     `https://www.jiosaavn.com/api.php` +
@@ -168,55 +118,34 @@ const server = http.createServer(async (req, res) => {
     `&__call=search.getResults`;
 
   try {
-    const response = await fetch(endpoint, {
-      method: "GET",
+    const response =
+      await fetch(endpoint, {
+        headers: {
+          accept:
+            "application/json, text/plain, */*",
 
-      headers: {
-        accept:
-          "application/json, text/plain, */*",
+          "x-requested-with":
+            "XMLHttpRequest",
 
-        "x-requested-with":
-          "XMLHttpRequest",
+          "accept-language":
+            "en-US,en;q=0.9",
 
-        "accept-language":
-          "en-US,en;q=0.9",
+          referer:
+            `https://www.jiosaavn.com/search/song/${encodeURIComponent(query)}`,
 
-        referer:
-          `https://www.jiosaavn.com/search/song/${encodeURIComponent(query)}`,
+          "user-agent":
+            "Mozilla/5.0",
 
-        "user-agent":
-          "Mozilla/5.0",
-
-        cookie:
-          "DL=english; " +
-          "L=english; " +
-          "mm_latlong=19.0760%2C72.8777; " +
-          "geo=19.0760%2C72.8777%2CIN%2CMaharashtra%2CMumbai%2C400001",
-      },
-    });
-
-    const rawText =
-      await response.text();
-
-    let data;
-
-    try {
-      data = JSON.parse(rawText);
-    } catch {
-      res.writeHead(500, {
-        "content-type":
-          "application/json",
+          cookie:
+            "DL=english; " +
+            "L=english; " +
+            "mm_latlong=19.0760%2C72.8777; " +
+            "geo=19.0760%2C72.8777%2CIN%2CMaharashtra%2CMumbai%2C400001",
+        },
       });
 
-      return res.end(
-        JSON.stringify({
-          status: false,
-          message:
-            "Invalid upstream response",
-          raw: rawText,
-        })
-      );
-    }
+    const data =
+      await response.json();
 
     const results =
       (data.results || [])
@@ -226,44 +155,22 @@ const server = http.createServer(async (req, res) => {
         )
         .map(formatSong);
 
-    res.writeHead(200, {
-      "content-type":
-        "application/json",
+    return res.status(200).json({
+      total: Number(
+        data.total || 0
+      ),
 
-      "access-control-allow-origin":
-        "*",
+      start: Number(
+        data.start || 0
+      ),
+
+      results,
     });
 
-    res.end(
-      JSON.stringify(
-        {
-          total: Number(
-            data.total || 0
-          ),
-
-          start: Number(
-            data.start || 0
-          ),
-
-          results,
-        },
-        null,
-        2
-      )
-    );
   } catch (err) {
-    res.writeHead(500, {
-      "content-type":
-        "application/json",
+    return res.status(500).json({
+      status: false,
+      message: err.message,
     });
-
-    res.end(
-      JSON.stringify({
-        status: false,
-        message: err.message,
-      })
-    );
   }
-});
-
-server.listen(3000);
+}
