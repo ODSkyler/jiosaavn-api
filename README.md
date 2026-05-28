@@ -57,6 +57,7 @@
 <pre>
 
 <b>Related albums:</b> /api/related?id={albumId}
+<b>Language based home feed<:/b> /api/home?lang={language}
 
 </pre>
 
@@ -177,7 +178,7 @@ Otherwise English/international search results will not appear.
 <h2>⚠️ Known issues</h2>
 
 <ul>
-  <li>Playlists may require pagination</li>
+  <li>Artist details endpoint may require pagination</li>
   <li>Some artist metadata is incomplete</li>
   <li>Explicit content is marked at album level so if the album is explicit then all the tracks in the album will labeled as explicit even if some tracks in the album are clean</li>
 </ul>
