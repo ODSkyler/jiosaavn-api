@@ -11,7 +11,8 @@ endpoints: {
   album_details: "/api/album?token=",
   artist_details: "/api/artist?token=",
   playlist_details: "/api/playlist?token=",
-  related_albums: "/api/related?id="
+  related_albums: "/api/related?id=",
+  language_based_homefeed: "api/home?lang="
    }
   made with ❤️ by: "OD SKYLER",
 }
