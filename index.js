@@ -1,7 +1,7 @@
 {
 status: "active",
 name: "JioSaavn API",
-repo: "ODSkyler/js",
+repo: "ODSkyler/jiosaavn-api",
 version: "1.0.0",
 endpoints: {
   song_search: "/api/songs?q=",
