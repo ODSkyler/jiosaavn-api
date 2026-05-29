@@ -60,7 +60,7 @@
 
 <b>Related albums:</b> /api/related?id={albumId}
 
-<b>Language based home feed<:/b> /api/home?lang={language}
+<b>Language based home feed:</b> /api/home?lang={language}
 
 </pre>
 
