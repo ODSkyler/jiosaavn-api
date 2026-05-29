@@ -21,7 +21,7 @@
 
 <ul>
   <li>🔍 Search songs, albums, artists, playlists</li>
-  <li>📀 Fetch artist / playlist details</li>
+  <li>📀 Fetch song / album / artist / playlist details</li>
   <li>🌍 Uses Mumbai region for proper English results</li>
 </ul>
 
@@ -59,6 +59,7 @@
 <pre>
 
 <b>Related albums:</b> /api/related?id={albumId}
+
 <b>Language based home feed<:/b> /api/home?lang={language}
 
 </pre>
@@ -110,8 +111,8 @@ AAC only.
 <h3>1️⃣ Clone repository</h3>
 
 <pre>
-git clone https://github.com/ODSkyler/js.git
-cd js
+git clone https://github.com/ODSkyler/jiosaavn-api.git
+cd jiosaavn-api
 </pre>
 
 <h3>2️⃣ Install dependencies</h3>
