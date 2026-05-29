@@ -243,63 +243,9 @@ export default async function handler(
       });
     }
 
-    const modules =
-      data.modules || {};
-
-    const formattedModules =
-      Object.entries(modules)
-        .sort(
-          (
-            [, a],
-            [, b]
-          ) =>
-            (a.position || 0) -
-            (b.position || 0)
-        )
-        .map(([key, module]) => {
-
-          const rawItems =
-            data[key];
-
-          if (
-            !Array.isArray(rawItems)
-          ) {
-            return null;
-          }
-
-          const items =
-            rawItems
-              .map(
-                formatModuleSong
-              )
-              .filter(Boolean);
-
-          if (!items.length) {
-            return null;
-          }
-
-          return {
-            id: key,
-
-            title:
-              decode(
-                module.title || ""
-              ),
-
-            position:
-              module.position || 0,
-
-            items,
-          };
-        })
-        .filter(Boolean);
-
-    return res.status(200).json({
-      ...formatSong(song),
-
-      modules:
-        formattedModules,
-    });
+    return res.status(200).json(
+  formatSong(song)
+);
 
   } catch (err) {
     return res.status(500).json({
