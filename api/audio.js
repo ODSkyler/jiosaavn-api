@@ -1,5 +1,8 @@
 import crypto from "crypto";
 
+export const runtime =
+  "nodejs";
+
 export const config = {
   regions: ["bom1"]
 };
@@ -12,24 +15,30 @@ function decryptMediaUrl(
 
   const decipher =
     crypto.createDecipheriv(
-      "des-ecb",
+      "DES-ECB",
       key,
       null
     );
 
   decipher.setAutoPadding(true);
 
-  let decrypted =
-    decipher.update(
+  const encrypted =
+    Buffer.from(
       encryptedUrl,
-      "base64",
-      "utf8"
+      "base64"
     );
 
-  decrypted +=
-    decipher.final("utf8");
+  const decrypted =
+    Buffer.concat([
+      decipher.update(
+        encrypted
+      ),
+      decipher.final(),
+    ]);
 
-  return decrypted;
+  return decrypted.toString(
+    "utf8"
+  );
 }
 
 function changeQuality(
