@@ -12,7 +12,7 @@ endpoints: {
   artist_details: "/api/artist?token={artistToken}",
   playlist_details: "/api/playlist?token={playlistToken}",
   related_albums: "/api/related?id={albumId}",
-  language_based_homefeed: "/api/home?lang={language}"
+  language_based_homefeed: "/api/home?lang={language}",
   language_based_new_releases: "/api/new?lang={language}"
    }
   made with ❤️ by: "OD SKYLER",
