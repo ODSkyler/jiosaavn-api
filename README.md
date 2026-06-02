@@ -17,12 +17,12 @@
 
 <hr>
 
-<h2>🚀 What this thing actually does</h2>
+<h2>🚀 What this API does</h2>
 
 <ul>
   <li>🔍 Search songs, albums, artists, playlists</li>
   <li>📀 Fetch song / album / artist / playlist details</li>
-  <li>🌍 Uses Mumbai region for proper English results</li>
+  <li>📀 Fetch Language based homefeed and new releases</li>
 </ul>
 
 <hr>
@@ -44,7 +44,6 @@
 <h3>📀 Details</h3>
 
 <pre>
-
 <b>Song details:</b> /api/song?token={songToken}
 
 <b>Album details:</b> /api/album?token={albumToken}
@@ -57,11 +56,11 @@
 <h3>Other Endpoints</h3>
 
 <pre>
-
 <b>Related albums:</b> /api/related?id={albumId}
 
 <b>Language based home feed:</b> /api/home?lang={language}
 
+<b>Language based new releases:</b> /api/new?lang={language}
 </pre>
 
 <hr>
@@ -71,7 +70,7 @@
 <p>You’ll get:</p>
 
 <pre>
-"encrypted_media_url": "ID2ieOjCrwfg..."
+"encrypted_media_url": "ID2ieOjCrwfgDecRYptyoURselF..."
 </pre>
 
 <p>
