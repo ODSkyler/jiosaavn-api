@@ -2,18 +2,18 @@
 status: "active",
 name: "JioSaavn API",
 repo: "ODSkyler/jiosaavn-api",
-version: "1.0.0",
 endpoints: {
-  song_search: "/api/songs?q=",
-  album_search: "/api/albums?q=",
-  artist_search: "/api/artists?q=",
-  playlist_search: "/api/playlists?q=",
-  song_details: "/api/song?token=",
-  album_details: "/api/album?token=",
-  artist_details: "/api/artist?token=",
-  playlist_details: "/api/playlist?token=",
-  related_albums: "/api/related?id=",
-  language_based_homefeed: "api/home?lang="
+  song_search: "/api/songs?q={query}",
+  album_search: "/api/albums?q={query}",
+  artist_search: "/api/artists?q={query}",
+  playlist_search: "/api/playlists?q={query}",
+  song_details: "/api/song?token={songToken}",
+  album_details: "/api/album?token={albumToken}",
+  artist_details: "/api/artist?token={artistToken}",
+  playlist_details: "/api/playlist?token={playlistToken}",
+  related_albums: "/api/related?id={albumId}",
+  language_based_homefeed: "/api/home?lang={language}"
+  language_based_new_releases: "/api/new?lang={language}"
    }
   made with ❤️ by: "OD SKYLER",
 }
