@@ -22,7 +22,7 @@
 <ul>
   <li>🔍 Search songs, albums, artists, playlists</li>
   <li>📀 Fetch song / album / artist / playlist details</li>
-  <li>📀 Fetch Language based homefeed and new releases</li>
+  <li>📀 Fetch Related albums, Language based homefeed and new releases</li>
 </ul>
 
 <hr>
@@ -138,6 +138,12 @@ http://localhost:3000
 
 <h2>🚀 Deploy to Vercel</h2>
 
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ODSkyler/jiosaavn-api)
+
+**One-click deployment:** Click the Deploy button above to deploy instantly to Vercel.
+
+## OR Manually
+
 <h3>1️⃣ Install Vercel CLI</h3>
 
 <pre>
@@ -200,7 +206,3 @@ This project is licensed under MIT License
 <p>
 <b>Built with ❤️ by OD Skyler</b>
 </p>
-
-<hr>
-
-<h2>⭐ If this helped you then drop a star...</h2>
