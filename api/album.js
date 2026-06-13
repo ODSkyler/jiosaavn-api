@@ -20,6 +20,9 @@ function formatArtist(artist) {
 
   return {
     id:
+      artist.id,
+
+    artist_token:
       token,
 
     name:
@@ -51,6 +54,9 @@ function formatAlbumSong(song) {
 
   return {
     id:
+      song.id,
+
+    token:
       token,
 
     title:
@@ -210,7 +216,11 @@ export default async function handler(
       permaUrl.split("/").pop() || token;
 
     return res.status(200).json({
+
       id:
+        album.id,
+      
+      token:
         albumToken,
 
       title:
