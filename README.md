@@ -46,7 +46,7 @@
 <pre>
 <b>Song details:</b> /api/song?token={songToken}
 
-<b>Album details:</b> /api/album?token={albumToken}&page=0
+<b>Album details:</b> /api/album?token={albumToken}
 
 <b>Artist details:</b> /api/artist?token={artistToken}&page=0
 
