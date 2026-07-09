@@ -324,6 +324,7 @@ export default async function handler(
       popularResponse,
       latestResponse
     ] = await Promise.all([
+
       fetch(popularEndpoint, {
         headers
       }),
@@ -333,11 +334,28 @@ export default async function handler(
       })
     ]);
 
+      console.log("Popular:", popularResponse.status);
+      console.log("Latest :", latestResponse.status);
+
     const popularData =
       await popularResponse.json();
 
     const latestData =
       await latestResponse.json();
+
+    console.log("Popular topAlbums:", popularData.topAlbums?.length);
+    console.log("Latest topAlbums :", latestData.topAlbums?.length);
+
+    console.log("Popular singles:", popularData.singles?.length);
+    console.log("Latest singles :", latestData.singles?.length);
+
+    console.log(popularData.topAlbums?.[0]);
+    console.log(latestData.topAlbums?.[0]);
+
+    console.log(
+    "Sending:",
+    (latestData.topAlbums || []).length
+    );
 
     return res.status(200).json({
       id: token,
