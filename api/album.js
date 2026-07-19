@@ -122,13 +122,13 @@ function formatAlbumSong(song) {
     },
 
     artists: {
-      primary_artists:
+      primary:
         (
           song.more_info?.artistMap
             ?.primary_artists || []
         ).map(formatArtist),
 
-      featured_artists:
+      featured:
         (
           song.more_info?.artistMap
             ?.featured_artists || []
@@ -256,13 +256,13 @@ export default async function handler(
         data.list_count || "0",
 
       artists: {
-        primary_artists:
+        primary:
           (
             data.more_info?.artistMap
               ?.primary_artists || []
           ).map(formatArtist),
 
-        featured_artists:
+        featured:
           (
             data.more_info?.artistMap
               ?.featured_artists || []
