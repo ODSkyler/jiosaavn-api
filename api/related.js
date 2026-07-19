@@ -75,13 +75,13 @@ function formatAlbum(album) {
       album.more_info?.song_count || "0",
 
     artists: {
-      primary_artists:
+      primary:
         (
           album.more_info?.artistMap
             ?.primary_artists || []
         ).map(formatArtist),
 
-      featured_artists:
+      featured:
         (
           album.more_info?.artistMap
             ?.featured_artists || []
