@@ -265,7 +265,7 @@ export default async function handler(
     `&n_album=50` +
     `&sub_type=` +
     `&category=` +
-    `&sort_order=` +
+    `&sort_order=asc` +
     `&includeMetaTags=0` +
     `&ctx=web6dot0` +
     `&api_version=4` +
