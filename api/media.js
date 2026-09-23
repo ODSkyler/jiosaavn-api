@@ -21,7 +21,7 @@ export default async function handler(
       return res.status(400).json({
         status: false,
         message:
-          "Missing image url",
+          "Missing media url",
       });
     }
 
@@ -40,7 +40,7 @@ export default async function handler(
       return res.status(500).json({
         status: false,
         message:
-          "Failed to fetch image",
+          "Failed to fetch media",
       });
     }
 
