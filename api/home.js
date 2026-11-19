@@ -25,7 +25,7 @@ function formatArtist(artist) {
     token,
 
     name:
-      decode(artist.name),
+      decode(artist.title),
 
     image:
       artist.image || "",
